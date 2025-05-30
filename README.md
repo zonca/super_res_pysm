@@ -8,4 +8,4 @@ In the Notebook `generate_galactic_dust_realization` we do some exploration of [
 For the last version of the Notebook, check the date in front of the file as `YYYYMM_thenotebook`
 
 ## Dataset generation
-The `dataset_generation.py` is a Python script that generates images from PySM simualtion in 2D.
+The `dataset_generation.py` is a Python script that generates images from PySM simulations in 2D.
