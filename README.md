@@ -11,4 +11,4 @@ For the last version of the Notebook, check the date in front of the file as `YY
 The `dataset_generation.py` is a Python script that generates images from PySM simulations in 2D.
 
 ## Profiling
-The performance of the SR3 model on the Voyager HPC system has been analyzed. Check [that section](voyager_profiling) for more details.
+The performance of the SR3 model on the Voyager HPC system has been analyzed. Check [that section](20250905_voyager_profiling) for more details.
