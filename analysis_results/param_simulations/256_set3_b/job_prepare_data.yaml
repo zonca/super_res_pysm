@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sr3
+spec:
+  restartPolicy: Never
+  nodeSelector:
+      brightcomputing.com/node-category: 'compute'
+  volumes:
+    - name: scratch
+      emptyDir: {}
+    - name: mydir
+      hostPath:
+        path: /home/javierhn/models/sr3_pysm
+        type: Directory
+    - name: dataset
+      hostPath:
+        path: /voyager/ceph/users/javierhn/datasets/pysm_realiz
+        type: Directory
+  containers:
+    - name: gaudi-container
+      image: vault.habana.ai/gaudi-docker/1.15.1/ubuntu22.04/habanalabs/pytorch-installer-2.2.0:latest
+      volumeMounts:
+        - mountPath: /scratch
+          name: scratch
+        - mountPath: /mydir
+          name: mydir 
+        - mountPath: /dataset
+          name: dataset 
+      resources:
+        limits:
+          memory: 4G
+          cpu: 4
+        requests:
+          memory: 2G
+          cpu: 4
+      command: ["/bin/sh","-c"]
+      args:
+        - hl-smi;
+          export HOME=/scratch/tmp;
+          export PATH=/scratch/tmp/.local/bin:$PATH;
+          export MODEL_PATH=/mydir/Super-Resolution-SR3;
+          export PT_HPU_MAX_COMPOUND_OP_SIZE=1;
+          cd /mydir;
+          pip install -r $MODEL_PATH/requirements.txt;
+          python $MODEL_PATH/data/prepare_data.py  --path /dataset/256_set3_test  --out /dataset/256_set3_test --size 64,256 -l;
+
+
+         
+
