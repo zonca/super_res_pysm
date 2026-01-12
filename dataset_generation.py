@@ -96,7 +96,7 @@ print(npix / 1e6, "Mpix")
 #save a map in HDF to preserve the wcs
 seed=101 #just some number
 crop_image=crop_image=get_image(nside,seed,healpix_reso,img_size)
-file_map_name=root_dataset_folder+dataset_name+'_map.hdf'
+file_map_name=root_dataset_folder+dataset_name+'_map.h5'
 pixell.enmap.write_map(file_map_name,crop_image,fmt='hdf')
 
 #create the TRAINING DATA
