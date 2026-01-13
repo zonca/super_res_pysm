@@ -1,12 +1,14 @@
 #NOTE: To avoid automatic execution set the 'execute' to False
 
-execute = False
+execute = True
 
 import numpy as np
 import pysm3
 from pysm3 import units as u
 import healpy as hp
 import matplotlib.pyplot as plt
+
+import time
 
 import pixell
 
@@ -79,13 +81,20 @@ if not execute:
 
 ################## Parameters
 
-dataset_name='256_set2'
-root_dataset_folder='/home/javierhn/datasets/galactic_dust_realization/'
+dataset_name='256_set3'
+root_dataset_folder='/dataset/'
 dataset_folder=root_dataset_folder+dataset_name+'/'
 dataset_folder_test=root_dataset_folder+dataset_name+'_test/'
+#Create the folders if they do not exist
+import os
+if not os.path.exists(dataset_folder):
+    os.makedirs(dataset_folder)
+if not os.path.exists(dataset_folder_test):
+    os.makedirs(dataset_folder_test)
 
-num_train_images=1000
-num_test_images=100
+
+num_train_images=4000
+num_test_images=500
 img_size=256
 nside = 256  # higher for high resolution
 healpix_reso = hp.nside2resol(nside) * u.radian
@@ -96,8 +105,10 @@ print(npix / 1e6, "Mpix")
 #save a map in HDF to preserve the wcs
 seed=101 #just some number
 crop_image=crop_image=get_image(nside,seed,healpix_reso,img_size)
-file_map_name=root_dataset_folder+dataset_name+'_map.h5'
+file_map_name=root_dataset_folder+dataset_name+'_map.hdf'
 pixell.enmap.write_map(file_map_name,crop_image,fmt='hdf')
+
+start_time_train = time.time()
 
 #create the TRAINING DATA
 for i in range(num_train_images):
@@ -109,6 +120,9 @@ for i in range(num_train_images):
     #write the image monochromatic in a png file
     pil_img.save(file_name)
 
+print("--- Training data took %s seconds ---" % (time.time() - start_time_train))
+
+start_time_test = time.time()
 
 #create the TEST DATA
 for i in range(num_test_images):
@@ -118,3 +132,5 @@ for i in range(num_test_images):
     file_name=dataset_folder_test+'{:04d}'.format(i)+'.png'
     #plt.imsave(fname=file_name, arr=crop_image, vmin=0, vmax=1000, origin="lower", format='png') #imsave save the array "as is"
     pil_img.save(file_name)
+
+print("--- Test data took %s seconds ---" % (time.time() - start_time_test))
